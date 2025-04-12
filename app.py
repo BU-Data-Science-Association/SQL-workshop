@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from flask import Flask, redirect, render_template, request, send_from_directory, url_for
+from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, url_for
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
@@ -39,6 +39,11 @@ def index():
     print('Request for index page received')
     restaurants = Restaurant.query.all()
     return render_template('index.html', restaurants=restaurants)
+
+@app.route('/dining_hall/<name>', methods = ['GET'])
+def diningHall(name):
+    #
+    return jsonify({'dining_hall': name})
 
 @app.route('/<int:id>', methods=['GET'])
 def details(id):

@@ -41,8 +41,55 @@
   </style>
 {% endblock %}
 {% block content %}
-      <h1>Restaurants</h1>
+      <h1>BU Dining Hall Food Search</h1>
+      <table class="table">
+        <thead>
+            <tr>
+                <th>Dining Hall</th>
+                <th>MEAT</th>
+                <th>Meal Type</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+                <form action="{{ url_for('diningHall', name = 'Warren' )}}" method="GET">
+                    <button type="submit" class="btn btn-primary">Warren</button>
+                </form>
+            </td>
+            <td>Chicken</td>
+            <td>Breakfast</td>
+        </tr>
+        <tr>
+            <td>
+                <form action="{{ url_for('diningHall', name = 'West' )}}" method="GET">
+                    <button type="submit" class="btn btn-primary">West</button>
+                </form>
+            </td>
+            <td>Beef</td>
+            <td>Lunch</td>
+        </tr>
+        <tr>
+            <td>
+              <form action="{{ url_for('diningHall', name = 'Marciano' )}}" method="GET">
+                <button type="submit" class="btn btn-primary">Marciano</button>
+              </form>
+            </td>
+            <td>Pork</td>
+            <td>Dinner</td>
+        </tr>
+        <tr>
+            <td>
+              <form action="{{ url_for('diningHall', name = 'Granby' )}}" method="GET">
+                <button type="submit" class="btn btn-primary">Granby</button>
+              </form>
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
 
+        </tbody>
+    </table>
       {% if True %}
           <table class="table">
               <thead>
@@ -66,7 +113,4 @@
           <p>No restaurants exist.  Select Add new restaurant to add one.</p>
       {% endif %}
 
-      <div class="d-flex justify-content-end">
-              <a href="{{ url_for('create_restaurant') }}" class="btn btn-success px-4 gap-3">Add new restaurant</a>
-      </div>
 {% endblock %}
