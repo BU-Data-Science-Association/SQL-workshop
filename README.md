@@ -1,22 +1,5 @@
----
-page_type: sample
-languages:
-- azdeveloper
-- python
-- bicep
-- html
-products:
-- azure
-- azure-app-service
-- azure-database-postgresql
-- azure-virtual-network
-urlFragment: msdocs-flask-postgresql-sample-app
-name: Deploy a Python (Flask) web app with PostgreSQL in Azure
-description: This is a Python web app using the Flask framework and the Azure Database for PostgreSQL relational database service. 
----
-<!-- YAML front-matter schema: https://review.learn.microsoft.com/en-us/help/contribute/samples/process/onboarding?branch=main#supported-metadata-fields-for-readmemd -->
-
-# Deploy a Python (Flask) web app with PostgreSQL in Azure
+# ~~Deploy~~ a Python (Flask) web app with PostgreSQL ~~in Azure~~
+### Workshop for the BU Data Science Association, Spring 2025, Adapted from Pamela Fox
 
 This is a Python web app using the Flask framework and the Azure Database for PostgreSQL relational database service. The Flask app is hosted in a fully managed Azure App Service. This app is designed to be be run locally and then deployed to Azure. You can either deploy this project by following the tutorial [*Deploy a Python (Django or Flask) web app with PostgreSQL in Azure*](https://docs.microsoft.com/azure/app-service/tutorial-python-postgresql-app) or by using the [Azure Developer CLI (azd)](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview) according to the instructions below.
 
@@ -57,42 +40,7 @@ This project has a [dev container configuration](.devcontainer/), which makes it
 
 1. When you see the message `Your application running on port 8000 is available.`, click **Open in Browser**.
 
-### Quick deploy
-
-This project is designed to work well with the [Azure Developer CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/overview), which makes it easier to develop apps locally, deploy them to Azure, and monitor them. 
-
-🎥 Watch a deployment of the code in [this screencast](https://www
-.youtube.com/watch?v=JDlZ4TgPKYc).
-
-Steps for deployment:
-
-1. Sign up for a [free Azure account](https://azure.microsoft.com/free/)
-2. Install the [Azure Dev CLI](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd). (If you opened this repository in a Dev Container, it's already installed for you.)
-3. Initialize a new `azd` environment:
-
-    ```shell
-    azd init
-    ```
-
-    It will prompt you to provide a name (like "flask-app"), which will later be used in the name of the deployed resources.
-
-4. Provision and deploy all the resources:
-
-    ```shell
-    azd up
-    ```
-
-    It will prompt you to login, pick a subscription, and provide a location (like "eastus"). Then it will provision the resources in your account and deploy the latest code. If you get an error with deployment, changing the location (like to "centralus") can help, as there may be availability constraints for some of the resources.
-
-5. When `azd` has finished deploying, you'll see an endpoint URI in the command output. Visit that URI, and you should see the front page of the restaurant review app! 🎉 If you see an error, open the Azure Portal from the URL in the command output, navigate to the App Service, select Logstream, and check the logs for any errors.
-
-    ![Screenshot of Flask restaurants website](screenshot_website.png)
-
-6. When you've made any changes to the app code, you can just run:
-
-    ```shell
-    azd deploy
-    ```
+### Quick deploy Information removed (check out original if interested)
 
 ## Getting help
 
