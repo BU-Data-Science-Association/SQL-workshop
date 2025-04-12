@@ -53,12 +53,20 @@
         <tbody>
           <tr>
             <td>
-                <form action="{{ url_for('diningHall', name = 'Warren' )}}" method="GET">
-                    <button type="submit" class="btn btn-primary">Warren</button>
-                </form>
+              <form action="{{ url_for('diningHall', name = 'Warren' )}}" method="GET">
+                  <button type="submit" class="btn btn-primary">Warren</button>
+              </form>
             </td>
-            <td>Chicken</td>
-            <td>Breakfast</td>
+            <td>
+              <form action="{{ url_for('meat', name = 'Chicken' )}}" method="GET">
+                  <button type="submit" class="btn btn-primary">Chicken</button>
+              </form>
+            </td>
+            <td>
+              <form action="{{ url_for('mealType', name = 'Breakfast' )}}" method="GET">
+                  <button type="submit" class="btn btn-primary">Breakfast</button>
+              </form>
+            </td>
         </tr>
         <tr>
             <td>
@@ -66,8 +74,16 @@
                     <button type="submit" class="btn btn-primary">West</button>
                 </form>
             </td>
-            <td>Beef</td>
-            <td>Lunch</td>
+            <td>
+              <form action="{{ url_for('meat', name = 'Beef' )}}" method="GET">
+                  <button type="submit" class="btn btn-primary">Beef</button>
+              </form>
+            </td>
+            <td>
+              <form action="{{ url_for('mealType', name = 'Lunch' )}}" method="GET">
+                  <button type="submit" class="btn btn-primary">Lunch</button>
+              </form>
+            </td>
         </tr>
         <tr>
             <td>
@@ -75,8 +91,16 @@
                 <button type="submit" class="btn btn-primary">Marciano</button>
               </form>
             </td>
-            <td>Pork</td>
-            <td>Dinner</td>
+            <td>
+              <form action="{{ url_for('meat', name = 'Pork' )}}" method="GET">
+                  <button type="submit" class="btn btn-primary">Pork</button>
+              </form>
+            </td>
+            <td>
+              <form action="{{ url_for('mealType', name = 'Dinner' )}}" method="GET">
+                  <button type="submit" class="btn btn-primary">Dinner</button>
+              </form>
+            </td>
         </tr>
         <tr>
             <td>
@@ -95,7 +119,11 @@
               <thead>
                   <tr>
                       <th>Name</th>
-                      <th>Rating</th>
+                      <th>Ingredients</th>
+                      <th>Station</th>
+                      <th>Location</th>
+                      <th>Meal</th>
+                      <th>Calories</th>
                       <th class="text-end">Details</th>
                   </tr>
               </thead>
@@ -110,7 +138,7 @@
               </tbody>
           </table>
       {% else %}
-          <p>No restaurants exist.  Select Add new restaurant to add one.</p>
+          <p>No food items exist.  Select Add new restaurant to add one.</p>
       {% endif %}
 
 {% endblock %}

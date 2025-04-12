@@ -45,11 +45,24 @@ def diningHall(name):
     #
     return jsonify({'dining_hall': name})
 
+
+@app.route('/meal_type/<name>', methods = ['GET'])
+def mealType(name):
+    #
+    return jsonify({'meal_type': name})
+
+@app.route('/meat/<name>', methods = ['GET'])
+def meat(name):
+    #
+    return jsonify({'meat': name})
+
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
     restaurant = Restaurant.query.where(Restaurant.id == id).first()
     reviews = Review.query.where(Review.restaurant == id)
     return render_template('details.html', restaurant=restaurant, reviews=reviews)
+
+
 
 @app.route('/create', methods=['GET'])
 def create_restaurant():
