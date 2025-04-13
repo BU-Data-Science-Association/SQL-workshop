@@ -5,6 +5,7 @@ from flask import Flask, jsonify, redirect, render_template, request, send_from_
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
+from sqlalchemy import MetaData
 
 
 app = Flask(__name__, static_folder='static')
@@ -34,33 +35,77 @@ migrate = Migrate(app, db)
 # The import must be done after db initialization due to circular import issue
 from models import Restaurant, Review
 
+
 @app.route('/', methods=['GET'])
 def index():
-    print('Request for index page received')
-    restaurants = Restaurant.query.all()
-    return render_template('index.html', restaurants=restaurants)
+    #print('Request for index page received')
+    #restaurants = Restaurant.query.all()
+    return render_template('index.html')#, restaurants=restaurants)
 
 @app.route('/dining_hall/<name>', methods = ['GET'])
 def diningHall(name):
-    #
-    return jsonify({'dining_hall': name})
+    sql = f'''
+        SELECT *
+        FROM public."{name}"
+        WHERE "Meal Type" = 'lunch'
+        
+    '''
+    with db.engine.connect() as conn:
+        result = conn.execute(db.text(sql)).fetchall()
+
+    rows = [dict(row._mapping) for row in result]
+    return render_template('index.html', results = rows)
 
 
 @app.route('/meal_type/<name>', methods = ['GET'])
 def mealType(name):
-    #
-    return jsonify({'meal_type': name})
+
+    name = name.lower()
+
+    sql = f'''
+    SELECT * FROM public."Warren" WHERE "Meal Type" LIKE '%{name}%'
+    UNION
+    SELECT * FROM public."Marciano" WHERE "Meal Type" LIKE '%{name}%'
+    UNION
+    SELECT * FROM public."West" WHERE "Meal Type" LIKE '%{name}%'
+    UNION
+    SELECT * FROM public."Granby" WHERE "Meal Type" LIKE '%{name}%'
+    '''
+    with db.engine.connect() as conn:
+        result = conn.execute(db.text(sql)).fetchall()
+
+    rows = [dict(row._mapping) for row in result]
+    return render_template('index.html', results = rows)
 
 @app.route('/meat/<name>', methods = ['GET'])
 def meat(name):
-    #
-    return jsonify({'meat': name})
+    sql = f'''
+    SELECT * FROM public."Warren" WHERE "Ingredients" LIKE '%{name}%'
+    UNION
+    SELECT * FROM public."Marciano" WHERE "Ingredients" LIKE '%{name}%'
+    UNION
+    SELECT * FROM public."West" WHERE "Ingredients" LIKE '%{name}%'
+    UNION
+    SELECT * FROM public."Granby" WHERE "Ingredients" LIKE '%{name}%'
+    '''
+    with db.engine.connect() as conn:
+        result = conn.execute(db.text(sql)).fetchall()
+
+    rows = [dict(row._mapping) for row in result]
+    return render_template('index.html', results = rows)
+
 
 @app.route('/<int:id>', methods=['GET'])
 def details(id):
     restaurant = Restaurant.query.where(Restaurant.id == id).first()
     reviews = Review.query.where(Review.restaurant == id)
     return render_template('details.html', restaurant=restaurant, reviews=reviews)
+
+
+
+
+
+
 
 
 
@@ -90,47 +135,6 @@ def add_restaurant():
         db.session.commit()
 
         return redirect(url_for('details', id=restaurant.id))
-
-@app.route('/review/<int:id>', methods=['POST'])
-@csrf.exempt
-def add_review(id):
-    try:
-        user_name = request.values.get('user_name')
-        rating = request.values.get('rating')
-        review_text = request.values.get('review_text')
-    except (KeyError):
-        #Redisplay the question voting form.
-        return render_template('add_review.html', {
-            'error_message': "Error adding review",
-        })
-    else:
-        review = Review()
-        review.restaurant = id
-        review.review_date = datetime.now()
-        review.user_name = user_name
-        review.rating = int(rating)
-        review.review_text = review_text
-        db.session.add(review)
-        db.session.commit()
-
-    return redirect(url_for('details', id=id))
-
-@app.context_processor
-def utility_processor():
-    def star_rating(id):
-        reviews = Review.query.where(Review.restaurant == id)
-
-        ratings = []
-        review_count = 0
-        for review in reviews:
-            ratings += [review.rating]
-            review_count += 1
-
-        avg_rating = sum(ratings) / len(ratings) if ratings else 0
-        stars_percent = round((avg_rating / 5.0) * 100) if review_count > 0 else 0
-        return {'avg_rating': avg_rating, 'review_count': review_count, 'stars_percent': stars_percent}
-
-    return dict(star_rating=star_rating)
 
 @app.route('/favicon.ico')
 def favicon():

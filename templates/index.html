@@ -128,13 +128,16 @@
                   </tr>
               </thead>
               <tbody>
-                  {% for restaurant in restaurants %}
-                      <tr>
-                          <td>{{ restaurant.name }}</td>
-                          <td>{% include "star_rating.html" %}</td>
-                          <td class="text-end"><a href="{{ url_for('details', id=restaurant.id) }}" class="btn btn-sm btn-primary">Details</a></td>
-                      </tr>
-                  {% endfor %}
+                {% for row in results %}
+                  <tr>
+                      <!-- Access the keys in each row dictionary -->
+                      <td>{{ row['Name'] }}</td>
+                      <td>{{ row['Ingredients'] }}</td>
+                      <td>{{ row['Station'] }}</td>
+                      <td>{{ row['Location'] }}</td>
+                      <td>{{ row['Meal Type'] }}</td>
+                  </tr>
+                {% endfor %}
               </tbody>
           </table>
       {% else %}
