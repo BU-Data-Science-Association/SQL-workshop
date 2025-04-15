@@ -42,6 +42,13 @@
 {% endblock %}
 {% block content %}
       <h1>BU Dining Hall Food Search</h1>
+
+      <div class="mb-4">
+          <form action="/" method="GET">
+              <button type="submit" class="btn btn-secondary">Clear</button>
+          </form>
+      </div>
+
       <table class="table">
         <thead>
             <tr>
@@ -140,6 +147,18 @@
                 {% endfor %}
               </tbody>
           </table>
+          <div class="mb-4">
+            <a href="{{ url_for('add_dhall_form') }}" class="btn btn-success">+ Add Dhall Item</a>
+          </div>
+          <form method="POST" action="/add_dhall">
+            <label>Name: <input name="name" required></label><br>
+            <label>Ingredients: <input name="ingredients" required></label><br>
+            <label>Station: <input name="station" required></label><br>
+            <label>Location: <input name="location" required></label><br>
+            <label>Meal Type: <input name="meal_type" required></label><br>
+            <label>Item ID: <input name="item_id" type="number" required></label><br>
+            <button type="submit">Add Dhall Item</button>
+          </form>    
       {% else %}
           <p>No food items exist.  Select Add new restaurant to add one.</p>
       {% endif %}

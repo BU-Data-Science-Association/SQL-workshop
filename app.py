@@ -43,10 +43,7 @@ def diningHall(name):
     # TODO Write SQL Query to get all food items at dining hall -> {name} 
 
     sql = f'''
-        SELECT DISTINCT *
-        FROM public."Dhall" as dh
-        LEFT JOIN public."{name}_Calories" as c ON c."Name" = dh."Name"
-        WHERE "Location" ILIKE '%{name}%'
+        SELECT NULL
     '''
 
     with db.engine.connect() as conn:
@@ -61,9 +58,7 @@ def meat(name):
     # TODO Write SQL Query to get all food items containing meat -> {name} 
 
     sql = f'''
-    SELECT *
-    FROM public."Dhall"
-    WHERE "Ingredients" ILIKE '%{name}%' 
+        SELECT NULL
     '''
 
     with db.engine.connect() as conn:
@@ -79,9 +74,7 @@ def mealType(name):
     # TODO Write SQL Query to get all food item served during meal_type -> {name} 
 
     sql = f'''
-        SELECT DISTINCT *
-        FROM public."Dhall"
-        WHERE "Meal Type" ILIKE '%{name}%'
+        SELECT NULL
     '''
     
     with db.engine.connect() as conn:
@@ -91,6 +84,39 @@ def mealType(name):
     return render_template('index.html', results = rows)
 
 
+@app.route('/add_dhall', methods=['POST'])
+@csrf.exempt
+def add_dhall():
+    try:
+        name = request.form.get('name')
+        ingredients = request.form.get('ingredients')
+        station = request.form.get('station')
+        location = request.form.get('location')
+        meal_type = request.form.get('meal_type')
+        item_id = request.form.get('item_id')  # BIGINT
+    except KeyError as e:
+        return jsonify({'error': f'Missing parameter: {str(e)}'}), 400
+
+    sql = '''
+        INSERT INTO public."Dhall" ("Name", "Ingredients", "Station", "Location", "Meal Type", "Item ID")
+        VALUES (:name, :ingredients, :station, :location, :meal_type, :item_id)
+    '''
+
+    with db.engine.begin() as conn:
+        conn.execute(db.text(sql), {
+            'name': name,
+            'ingredients': ingredients,
+            'station': station,
+            'location': location,
+            'meal_type': meal_type,
+            'item_id': int(item_id)
+        })
+
+    return redirect(url_for('index'))
+
+@app.route('/add_dhall_form', methods=['GET'])
+def add_dhall_form():
+    return render_template('add.html')
 
 @app.route('/favicon.ico')
 def favicon():
