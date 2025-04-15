@@ -122,9 +122,8 @@
                       <th>Ingredients</th>
                       <th>Station</th>
                       <th>Location</th>
-                      <th>Meal</th>
+                      <th>Meal Type</th>
                       <th>Calories</th>
-                      <th class="text-end">Details</th>
                   </tr>
               </thead>
               <tbody>
@@ -136,6 +135,7 @@
                       <td>{{ row['Station'] }}</td>
                       <td>{{ row['Location'] }}</td>
                       <td>{{ row['Meal Type'] }}</td>
+                      <td>{{ row['Calories'] }}</td>
                   </tr>
                 {% endfor %}
               </tbody>

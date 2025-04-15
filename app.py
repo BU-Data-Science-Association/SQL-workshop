@@ -45,10 +45,10 @@ def index():
 @app.route('/dining_hall/<name>', methods = ['GET'])
 def diningHall(name):
     sql = f'''
-        SELECT *
-        FROM public."{name}"
-        WHERE "Meal Type" = 'lunch'
-        
+        SELECT DISTINCT *
+        FROM public."Dhall" as dh
+        LEFT JOIN public."{name}_Calories" as c ON c."Name" = dh."Name"
+        WHERE "Location" ILIKE '%{name}%'
     '''
     with db.engine.connect() as conn:
         result = conn.execute(db.text(sql)).fetchall()
@@ -63,13 +63,9 @@ def mealType(name):
     name = name.lower()
 
     sql = f'''
-    SELECT * FROM public."Warren" WHERE "Meal Type" LIKE '%{name}%'
-    UNION
-    SELECT * FROM public."Marciano" WHERE "Meal Type" LIKE '%{name}%'
-    UNION
-    SELECT * FROM public."West" WHERE "Meal Type" LIKE '%{name}%'
-    UNION
-    SELECT * FROM public."Granby" WHERE "Meal Type" LIKE '%{name}%'
+        SELECT DISTINCT *
+        FROM public."Dhall"
+        WHERE "Meal Type" ILIKE '%{name}%'
     '''
     with db.engine.connect() as conn:
         result = conn.execute(db.text(sql)).fetchall()
@@ -80,13 +76,10 @@ def mealType(name):
 @app.route('/meat/<name>', methods = ['GET'])
 def meat(name):
     sql = f'''
-    SELECT * FROM public."Warren" WHERE "Ingredients" LIKE '%{name}%'
-    UNION
-    SELECT * FROM public."Marciano" WHERE "Ingredients" LIKE '%{name}%'
-    UNION
-    SELECT * FROM public."West" WHERE "Ingredients" LIKE '%{name}%'
-    UNION
-    SELECT * FROM public."Granby" WHERE "Ingredients" LIKE '%{name}%'
+    SELECT *
+    FROM public."Dhall"
+    WHERE "Ingredients" ILIKE '%{name}%' 
+
     '''
     with db.engine.connect() as conn:
         result = conn.execute(db.text(sql)).fetchall()
