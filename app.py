@@ -1,12 +1,10 @@
 import os
 from datetime import datetime
-
 from flask import Flask, jsonify, redirect, render_template, request, send_from_directory, url_for
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 from sqlalchemy import MetaData
-
 
 app = Flask(__name__, static_folder='static')
 csrf = CSRFProtect(app)
@@ -35,38 +33,22 @@ migrate = Migrate(app, db)
 # The import must be done after db initialization due to circular import issue
 from models import Restaurant, Review
 
-
 @app.route('/', methods=['GET'])
 def index():
-    #print('Request for index page received')
-    #restaurants = Restaurant.query.all()
-    return render_template('index.html')#, restaurants=restaurants)
+    return render_template('index.html')
 
 @app.route('/dining_hall/<name>', methods = ['GET'])
 def diningHall(name):
+
+    # TODO Write SQL Query to get all food items at dining hall -> {name} 
+
     sql = f'''
         SELECT DISTINCT *
         FROM public."Dhall" as dh
         LEFT JOIN public."{name}_Calories" as c ON c."Name" = dh."Name"
         WHERE "Location" ILIKE '%{name}%'
     '''
-    with db.engine.connect() as conn:
-        result = conn.execute(db.text(sql)).fetchall()
 
-    rows = [dict(row._mapping) for row in result]
-    return render_template('index.html', results = rows)
-
-
-@app.route('/meal_type/<name>', methods = ['GET'])
-def mealType(name):
-
-    name = name.lower()
-
-    sql = f'''
-        SELECT DISTINCT *
-        FROM public."Dhall"
-        WHERE "Meal Type" ILIKE '%{name}%'
-    '''
     with db.engine.connect() as conn:
         result = conn.execute(db.text(sql)).fetchall()
 
@@ -75,12 +57,33 @@ def mealType(name):
 
 @app.route('/meat/<name>', methods = ['GET'])
 def meat(name):
+
+    # TODO Write SQL Query to get all food items containing meat -> {name} 
+
     sql = f'''
     SELECT *
     FROM public."Dhall"
     WHERE "Ingredients" ILIKE '%{name}%' 
-
     '''
+
+    with db.engine.connect() as conn:
+        result = conn.execute(db.text(sql)).fetchall()
+
+    rows = [dict(row._mapping) for row in result]
+    return render_template('index.html', results = rows)
+
+@app.route('/meal_type/<name>', methods = ['GET'])
+def mealType(name):
+    name = name.lower()
+
+    # TODO Write SQL Query to get all food item served during meal_type -> {name} 
+
+    sql = f'''
+        SELECT DISTINCT *
+        FROM public."Dhall"
+        WHERE "Meal Type" ILIKE '%{name}%'
+    '''
+    
     with db.engine.connect() as conn:
         result = conn.execute(db.text(sql)).fetchall()
 
@@ -88,46 +91,6 @@ def meat(name):
     return render_template('index.html', results = rows)
 
 
-@app.route('/<int:id>', methods=['GET'])
-def details(id):
-    restaurant = Restaurant.query.where(Restaurant.id == id).first()
-    reviews = Review.query.where(Review.restaurant == id)
-    return render_template('details.html', restaurant=restaurant, reviews=reviews)
-
-
-
-
-
-
-
-
-
-@app.route('/create', methods=['GET'])
-def create_restaurant():
-    print('Request for add restaurant page received')
-    return render_template('create_restaurant.html')
-
-@app.route('/add', methods=['POST'])
-@csrf.exempt
-def add_restaurant():
-    try:
-        name = request.values.get('restaurant_name')
-        street_address = request.values.get('street_address')
-        description = request.values.get('description')
-    except (KeyError):
-        # Redisplay the question voting form.
-        return render_template('add_restaurant.html', {
-            'error_message': "You must include a restaurant name, address, and description",
-        })
-    else:
-        restaurant = Restaurant()
-        restaurant.name = name
-        restaurant.street_address = street_address
-        restaurant.description = description
-        db.session.add(restaurant)
-        db.session.commit()
-
-        return redirect(url_for('details', id=restaurant.id))
 
 @app.route('/favicon.ico')
 def favicon():
